@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 # Initialize the SQLAlchemy database
 db = SQLAlchemy()
 
+
 def create_app() -> Flask:
     """
     Create and configure the Flask application.
@@ -14,10 +15,15 @@ def create_app() -> Flask:
     app = Flask(__name__)
 
     # Load configuration from config.py
-    app.config.from_object('config.config')
+    # app.config.from_object('config.config') # This buggy and unnecessary from the original code but I wont remove it
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://dev_test:DevLog#1@localhost/iwallet_fcmb_db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ECHO'] = False
 
     # Initialize the database
     db.init_app(app)
+    with app.app_context():
+        db.create_all()
 
     # Import and register blueprints for each feature
     from .routes.loan import loan_bp
@@ -35,15 +41,15 @@ def create_app() -> Flask:
     from .routes.notifications import notifications_bp
 
     # Register blueprints
-    app.register_blueprint(loan_bp)
-    app.register_blueprint(messaging_bp)
-    app.register_blueprint(feedback_bp)
-    app.register_blueprint(referral_bp)
-    app.register_blueprint(location_bp)
-    app.register_blueprint(auth_bp)
-    app.register_blueprint(dispute_bp)
-    app.register_blueprint(review_bp)
-    app.register_blueprint(transaction_bp)
+    app.register_blueprint(loan_bp, url_prefix='/loan')
+    app.register_blueprint(messaging_bp, url_prefix='/messaging')
+    app.register_blueprint(feedback_bp, url_prefix='/feedback')
+    app.register_blueprint(referral_bp, url_prefix='/referral')
+    app.register_blueprint(location_bp, url_prefix='/location')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(dispute_bp, url_prefix='/dispute')
+    app.register_blueprint(review_bp, url_prefix='/review')
+    app.register_blueprint(transaction_bp, url_prefix='/transaction')
     app.register_blueprint(chatbot_bp, url_prefix='/chatbot')
     app.register_blueprint(faq_bp, url_prefix='/faq')
     app.register_blueprint(support_bp, url_prefix='/support')
