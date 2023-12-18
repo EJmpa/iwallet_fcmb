@@ -1,7 +1,7 @@
 # app/routes/dispute.py
 from flask import Blueprint
 
-dispute_bp = Blueprint('dispute', __name__)
+review_bp = Blueprint('review', __name__)
 
-# Dispute management routes and functions
-# You can place your dispute-related code here
+# Review management routes and functions
+# You can place your review-related code here
