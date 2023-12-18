@@ -1,8 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
-# Initialize the SQLAlchemy database
-db = SQLAlchemy()
+from app.models import db
 
 
 def create_app() -> Flask:
@@ -23,7 +21,9 @@ def create_app() -> Flask:
     # Initialize the database
     db.init_app(app)
     with app.app_context():
+        print("Initializing database...") # Database aknowledgement message
         db.create_all()
+        print("Database initialized.")
 
     # Import and register blueprints for each feature
     from .routes.loan import loan_bp
